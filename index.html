@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منارة الروايات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fbf9f5;
+            color: #4a3b32;
+            text-align: right;
+        }
+        header {
+            background-color: #6b4f3b;
+            color: #fbf9f5;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 4px solid #4a3b32;
+        }
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .search-box {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-box input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #a65d57;
+            border-radius: 8px;
+            background-color: #faf3f2;
+            color: #5c3a35;
+            outline: none;
+        }
+        .book-card {
+            background: #ffffff;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(107, 79, 59, 0.1);
+            border: 1px solid #e6dfd5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .book-cover {
+            width: 70px;
+            height: 100px;
+            background-color: #eee6db;
+            border: 1px solid #d4c5b9;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .book-info {
+            flex: 1;
+            min-width: 220px;
+        }
+        .book-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #6b4f3b;
+        }
+        .book-author {
+            font-size: 13px;
+            color: #a81321;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .book-desc {
+            font-size: 13px;
+            color: #66584f;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .buttons-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: flex-end;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #8c6239;
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #553d2d;
+        }
+        .btn-read {
+            background-color: #a67c52;
+        }
+        .reviews-section {
+            background: #f4eee1; /* خلفية دافئة ومميزة لقسم التقييمات */
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            border: 2px solid #8c6239; /* إطار برونزي واضح وجذاب */
+            box-shadow: 0 4px 8px rgba(107, 79, 59, 0.1);
+        }
+        .reviews-section h2 {
+            color: #6b4f3b;
+            margin-top: 0;
+            font-size: 20px;
+            border-bottom: 2px solid #e6dfd5;
+            padding-bottom: 10px;
+        }
+        .review-item {
+            background-color: #ffffff; /* خلفية بيضاء للتعليقات باش تباين شابة وسط القسم */
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-right: 4px solid #a67c52; /* خط جانبي أنيق لكل تعليق */
+        }
+
+        .review-form input, .review-form textarea, .review-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d4c5b9;
+            border-radius: 6px;
+            background-color: #fbf9f5;
+            color: #4a3b32;
+            font-size: 14px;
+            outline: none;
+        }
+        .review-form textarea {
+            resize: vertical;
+            height: 80px;
+        }
+        .review-item {
+            background-color: #fbf9f5;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-right: 4px solid #8c6239;
+        }
+        .review-author {
+            font-weight: bold;
+            color: #6b4f3b;
+            font-size: 14px;
+        }
+        .review-stars {
+            color: #d4a373;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+        .review-text {
+            font-size: 13px;
+            color: #55443b;
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(74, 59, 50, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fbf9f5;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            width: 85%;
+            max-width: 400px;
+            border: 2px solid #6b4f3b;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #6b4f3b;
+            cursor: pointer;
+        }
+        .ad-space {
+            background-color: #eee6db;
+            border: 2px dashed #a69584;
+            padding: 20px;
+            margin: 15px 0;
+            color: #6b4f3b;
+            font-weight: bold;
+            border-radius: 6px;
+        }
+        #readPageView {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #e6dfd5;
+        }
+        .chapter-content {
+            line-height: 1.8;
+            font-size: 16px;
+            color: #4a3b32;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>منارة الروايات</h1>
+        <p>مكتبتك الدافئة لتحميل وقراءة أروع الروايات والكتب</p>
+    </header>
+
+    <div class="container" id="booksListView">
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" onkeyup="searchBooks()" placeholder="ابحث عن اسم الرواية هنا...">
+        </div>
+
+        <h2>قائمة الروايات المتاحة</h2>
+
+        <div id="booksContainer">
+            <!-- رواية آزر -->
+            <div class="book-card">
+                <div class="book-cover"><img src="azar.jpg" alt="غلاف آزر"></div>
+                <div class="book-info">
+                    <h3>آزر (ابن ذئبة الوادي)</h3>
+                    <div class="book-author">المؤلف: أحمد آل حمدان</div>
+                    <div class="book-desc">من أجمل الإصدارات، رحلة مشوقة ومغامرة فريدة من نوعها في عوالم الخيال.</div>
+                </div>
+                <div class="buttons-group">
+                    <button class="btn btn-read" onclick="showNormalAd('read', 'آزر')">قراءة أونلاين</button>
+                    <button class="btn" onclick="showNormalAd('download', 'azar.pdf')">تحميل (PDF)</button>
+                </div>
+            </div>
+
+            <!-- رواية وهج البنفسج -->
+            <div class="book-card">
+                <div class="book-cover"><img src="wahaj.jpg" alt="غلاف وهج البنفسج"></div>
+                <div class="book-info">
+                    <h3>وهج البنفسج</h3>
+                    <div class="book-author">المؤلف: أسامة المسلم</div>
+                    <div class="book-desc">رواية خيالية ممتعة تأخذك إلى عوالم مثيرة ومغامرات فريدة.</div>
+                </div>
+                <div class="buttons-group">
+                    <button class="btn btn-read" onclick="showNormalAd('read', 'وهج البنفسج')">قراءة أونلاين</button>
+                    <button class="btn" onclick="showNormalAd('download', 'wahaj.pdf')">تحميل (PDF)</button>
+                </div>
+            </div>
+            
+            <!-- رواية لج -->
+            <div class="book-card">
+                <div class="book-cover"><img src="ludj.jpg" alt="غلاف لج"></div>
+                <div class="book-info">
+                    <h3>لُج (ملحمة البحور السبعة 1)</h3>
+                    <div class="book-author">المؤلف: أسامة المسلم</div>
+                    <div class="book-desc">الجزء الأول من الملحمة الخيالية الشهيرة في عالم البحور السبعة.</div>
+                </div>
+                <div class="buttons-group">
+                    <button class="btn btn-read" onclick="showNormalAd('read', 'لُج')">قراءة أونلاين</button>
+                    <button class="btn" onclick="showNormalAd('download', 'ludj.pdf')">تحميل (PDF)</button>
+                </div>
+            </div>
+            
+            <!-- رواية أرض زيكولا -->
+            <div class="book-card">
+                <div class="book-cover"><img src ="zikola.jpg" alt="غلاف أرض زيكولا"></div>
+                <div class="book-info">
+                    <h3>أرض زيكولا (أرض زيكولا 1)</h3>
+                    <div class="book-author">المؤلف: عمرو عبد الحميد</div>
+                    <div class="book-desc">رواية الذكاء والمغامرة حيث تتعامل أرض زيكولا بوحدات أخرى غير المال.</div>
+                </div>
+                <div class="buttons-group">
+                    <button class="btn btn-read" onclick="showNormalAd('read', 'أرض زيكولا')">قراءة أونلاين</button>
+                    <button class="btn" onclick="showNormalAd('download', 'zikola.pdf')">تحميل (PDF)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم التقييمات والآراء -->
+        <div class="reviews-section">
+            <h2>آراء وتقييمات القراء</h2>
+            
+            <div class="review-form">
+                <input type="text" id="reviewerName" placeholder="اسمك الكريم...">
+                <select id="reviewRating">
+                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ (ممتاز جداً)</option>
+                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐ (رائع)</option>
+                    <option value="⭐⭐⭐">⭐⭐⭐ (جيد)</option>
+                    <option value="⭐⭐">⭐⭐ (مقبول)</option>
+                    <option value="⭐">⭐ (ضعيف)</option>
+                </select>
+                <textarea id="reviewText" placeholder="اكتب رأيك أو انطباعك عن الموقع أو الروايات..."></textarea>
+                <button class="btn" onclick="addReview()">إرسال التقييم</button>
+            </div>
+
+            <div id="reviewsList">
+                <div class="review-item">
+                    <div class="review-author">سارة م.</div>
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="review-text">الموقع بزاف هايل والتصميم دافئ ومرتب، شكراً على توفير الروايات بروابط مباشرة وقراءة مريحة!</div>
+                </div>
+                <div class="review-item">
+                    <div class="review-author">أمين</div>
+                    <div class="review-stars">⭐⭐⭐⭐</div>
+                    <div class="review-text">فكرة ممتازة، أتمنى تزيدولنا روايات أخرى قريباً. بالتوفيق!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الإعلان المنبثقة -->
+    <div id="adModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAdModal()">&times;</span>
+            <h3>إعلان</h3>
+            <div class="ad-space">مكان إعلانك هنا</div>
+            <button class="btn" onclick="proceedAfterAd()" style="width:100%; margin-top:10px;">متابعة</button>
+        </div>
+    </div>
+
+    <!-- صفحة القراءة أونلاين -->
+    <div id="readPageView">
+        <button class="btn" onclick="backToHome()" style="margin-bottom: 15px;">← العودة للمكتبة</button>
+        <h2 id="readingBookTitle">عنوان الرواية</h2>
+        <div class="chapter-content">
+            <p>هنا يبدأ نص الفصل الأول من الرواية، وتتتابع الأحداث بسلاسة وجاذبية تامة للقارئ...</p>
+            <div class="ad-space" style="text-align: center; font-size: 14px;">[إعلان موزع 1 داخل الكتاب]</div>
+            <p>تستمر تفاصيل القصة والتشويق في التصاعد، حيث يكتشف الأبطال أسراراً جديدة ومثيرة...</p>
+            <div class="ad-space" style="text-align: center; font-size: 14px;">[إعلان موزع 2 داخل الكتاب]</div>
+            <p>تتوالى الأحداث والمواجهات بين الشخصيات في جو ممتع ومليء بالإثارة...</p>
+            <div class="ad-space" style="text-align: center; font-size: 14px;">[إعلان موزع 3 داخل الكتاب]</div>
+            <p>نصل إلى ختام هذا الفصل الممتع، في انتظار الفصل القادم المليء بالمفاجآت...</p>
+            <div class="ad-space" style="text-align: center; font-size: 14px;">[إعلان النهاية الموزع 4]</div>
+        </div>
+    </div>
+
+    <script>
+        let pendingAction = null;
+        let targetData = null;
+
+        function showNormalAd(actionType, data) {
+            pendingAction = actionType;
+            targetData = data;
+            document.getElementById('adModal').style.display = 'flex';
+        }
+
+        function closeAdModal() {
+            document.getElementById('adModal').style.display = 'none';
+            executePendingAction();
+        }
+
+        function proceedAfterAd() {
+            document.getElementById('adModal').style.display = 'none';
+            executePendingAction();
+        }
+
+        function executePendingAction() {
+            if (pendingAction === 'download') {
+                let a = document.createElement('a');
+                a.href = targetData;
+                a.download = targetData;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else if (pendingAction === 'read') {
+                document.getElementById('booksListView').style.display = 'none';
+                document.getElementById('readPageView').style.display = 'block';
+                document.getElementById('readingBookTitle').innerText = targetData;
+                window.scrollTo(0, 0);
+            }
+            pendingAction = null;
+            targetData = null;
+        }
+
+        function backToHome() {
+            document.getElementById('readPageView').style.display = 'none';
+            document.getElementById('booksListView').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function searchBooks() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('book-card');
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                if (title.includes(input)) {
+                    cards[i].style.display = "flex";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+
+        function addReview() {
+            let name = document.getElementById('reviewerName').value.trim();
+            let rating = document.getElementById('reviewRating').value;
+            let text = document.getElementById('reviewText').value.trim();
+
+            if (name === "" || text === "") {
+                alert("يرجى ملء الاسم وكتابة الرأي قبل الإرسال!");
+                return;
+            }
+
+            let reviewsList = document.getElementById('reviewsList');
+            let newReview = document.createElement('div');
+            newReview.className = 'review-item';
+            newReview.innerHTML = `
+                <div class="review-author">${name}</div>
+                <div class="review-stars">${rating}</div>
+                <div class="review-text">${text}</div>
+            `;
+            
+            reviewsList.prepend(newReview);
+
+            document.getElementById('reviewerName').value = "";
+            document.getElementById('reviewText').value = "";
+        }
+    </script>
+</body>
+  </html>
